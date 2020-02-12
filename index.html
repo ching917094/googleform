@@ -7,17 +7,41 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <title>賈霸咩</title>
+    <!-- 字形 -->
+    <link href="https://fonts.googleapis.com/css?family=Galada|Noto+Sans+TC|Sriracha&display=swap" rel="stylesheet">
+    <title>GOOD GOOD EAT</title>
     <style>
         .error {
             color: red;
+        }
+        body {            
+			margin-top: 0px;
+            margin-left: 0px;
+            background: linear-gradient( /* linear-gradient()是一個函式,為線性漸層 */
+            0deg, /* deg角度 */
+            rgb(230, 204, 204) 0%,  /* 顏色 位置 ,顏色可以設定很多但位置要由小到大 */
+            rgb(165, 212, 134) 20%,
+            rgb(255, 253, 165) 40%,
+            rgb(212, 208, 252) 60%,
+            rgb(152, 236, 211) 80%,
+            rgb(240, 202, 202) 100%
+            );
+        }
+        h1 {
+            font-family: 'Sriracha', cursive;
+            font-size: 35px;
+            color: teal;
+        }
+        label {
+            font-family: 'Noto Sans TC', sans-serif;
+            color: teal;
         }
     </style>
 </head>
 <body>
     
     <div class="container">
-        <h1 class="mt-5 text-center">賈霸咩</h1>
+        <h1 class="mt-5 mb-5 text-center">GOOD GOOD EAT</h1>
         <!-- 表單返回頁，記得在表單加「 target='returnWin' 」 -->
         <iframe name="returnWin" style="display: none;" onload="this.onload=function(){window.location='ok.html'}"></iframe>
         <form target='returnWin' role="form" action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSfEz4yel_hU6lfM_tgx5-RUdbXQCdedYKDWR3KJsY5iXzL_BA/formResponse" method="post" id="myForm" >
@@ -38,35 +62,42 @@
                         </select>
                     </div>
                 </div>
+                <!--合計-->              
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>合計</label>
+                        <input type="text" class="form-control" name="total" id="total" value="" readonly>
+                    </div>
+                </div>      
             </div>
             <div class="row">
                 <!--雞腿飯-90元-->              
                 <div class="col-sm-3">
                     <div class="form-group">
-                        <label>雞腿飯-90元<span class="text-danger">(請填數量)</span></label>
-                        <input type="number" class="form-control" name="entry.175620156" id="175620156" value="0" min=0>
+                        <label><span class="title">雞腿飯-90元</span><span class="text-danger">(請填數量)</span></label>
+                        <input type="number" class="form-control amount" name="entry.175620156" id="175620156" value="0" min=0 onchange="calToal()">
                         <!--type="number"限制他只能輸入數字 min=0限制數量不能小於0-->
                     </div>
                 </div>          
                 <!--雞排飯-80元-->              
                 <div class="col-sm-3">
                     <div class="form-group">
-                        <label>雞排飯-80元<span class="text-danger">(請填數量)</span></label>
-                        <input type="number" class="form-control" name="entry.20342343" id="20342343" value="0" min=0>
+                        <label><span class="title">雞排飯-80元</span><span class="text-danger">(請填數量)</span></label>
+                        <input type="number" class="form-control amount" name="entry.20342343" id="20342343" value="0" min=0 onchange="calToal()">
                     </div>
                 </div>          
                 <!--排骨飯-70元-->              
                 <div class="col-sm-3">
                     <div class="form-group">
-                        <label>排骨飯-70元<span class="text-danger">(請填數量)</span></label>
-                        <input type="number" class="form-control" name="entry.1666229335" id="1666229335" value="0" min=0>
+                        <label><span class="title">排骨飯-70元</span><span class="text-danger">(請填數量)</span></label>
+                        <input type="number" class="form-control amount" name="entry.1666229335" id="1666229335" value="0" min=0 onchange="calToal()">
                     </div>
                 </div>          
                 <!--招牌飯-60元-->              
                 <div class="col-sm-3">
                     <div class="form-group">
-                        <label>招牌飯-60元<span class="text-danger">(請填數量)</span></label>
-                        <input type="number" class="form-control" name="entry.562920021" id="562920021" value="0" min=0>
+                        <label><span class="title">招牌飯-60元</span><span class="text-danger">(請填數量)</span></label>
+                        <input type="number" class="form-control amount" name="entry.562920021" id="562920021" value="0" min=0 onchange="calToal()">
                     </div>
                 </div>         
             </div>                 
@@ -98,18 +129,18 @@
         $(function(){ 
             $("#myForm").validate(); // 必填,在要必填的項目上加上required連動
         }); */
-        $(function(){ //必填驗證程式碼寫法2
+        $(function(){ 
             $("#myForm").validate({
                 submitHandler: function(form) {
                     form.submit();
                 },
                 rules: {
                     'entry.588854887' : { //必填欄位的name
-                        required:true
+                        required:true //必填驗證程式碼寫法2
                     },
                     'entry.175620156' : {
-                        digits:true,
-                        min:0                     
+                        digits:true, //驗證整數
+                        min:0        //驗證最小數字大於等於0   
                     },
                     'entry.20342343' : {
                         digits:true,
@@ -122,6 +153,9 @@
                     'entry.562920021' : {
                         digits:true,
                         min:0                     
+                    },
+                    'total' : { //必填欄位的name
+                        required:true //必填驗證程式碼寫法2
                     },
                 },messages: {
                     'entry.588854887' : {
@@ -142,10 +176,30 @@
                     'entry.562920021' : {
                         digits:"請填整數",
                         min:"請填正確數量"                      
-                    },
+                    },'total' : {
+                        required:"尚未點餐" //可自行設定顯示文字
+                    }
                 }
             });
         });
+        
+        function calToal(){ // 自動計算合計金額函式
+            var amounts = document.getElementsByClassName("amount");
+            var titles = document.getElementsByClassName("title");
+            var total = 0; //定義總和的起始
+            for(var i=0; i < amounts.length; i++){
+                var amount = document.getElementsByClassName("amount")[i].value; //取數量
+                var title = document.getElementsByClassName("title")[i].innerText; //取標題
+                var subArr = title.split("-"); //將字串拆開成名字和價錢
+                var price = parseInt(subArr[1]); //將價錢字串改成值
+                total += amount * price; //算式
+            }
+            if(total === 0) {
+                document.getElementById("total").value = "";
+            } else {
+                document.getElementById("total").value = total;
+            }            
+        }
     </script>
 </body>
 </html>
